@@ -222,7 +222,7 @@
 .daterangepicker .drp-buttons {
   clear: both;
   text-align: right;
-  background: url(../../../img/popup_foot_bg.png) repeat-x left bottom scroll, url(../../../img/bg_stripe.jpg) repeat left top;
+  background: url(../../../img/popup_foot_bg.png) repeat-x left bottom scroll, url(../../../MOD/custom_bg/bg_stripe.jpg) repeat left top;
   border-top: 1px solid rgba(78, 86, 90, 0.41);
   display: none;
   line-height: 12px;

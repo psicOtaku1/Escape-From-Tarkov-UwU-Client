@@ -517,7 +517,7 @@ function renderBackground(page) {
 	if($('#main_content').length && $('#settings_content').length) {
 		try {
 			var branch = "default",
-				url = 'img/main_art.jpg',
+				url = 'MOD/custom_bg/main_art.jpg',
 				bgposition = 'center top';
 
 			if(

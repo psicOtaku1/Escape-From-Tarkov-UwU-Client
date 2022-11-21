@@ -108,7 +108,7 @@ body {
     text-rendering: optimizeLegibility;
     background: url(../MOD/custom_bg/bg_stripe.jpg) repeat left top;
     font-family: "Bender";
-    color: rgba(255,255,255,0.42);
+    color: rgba(77, 8, 100, 1);
     width: calc(100% - 2px);
     height: calc(100% - 2px);
 }
@@ -116,7 +116,7 @@ body[data-branch="tournament"] {
     background: url(../MOD/custom_bg/bg_stripe_tournament.jpg) repeat left top;
 }
 h1, h2, h3, h4, h5, h6 {
-    color: #fffff3;
+    color: rgba(77, 8, 100, 1);
 }
 img {
     display: block;
@@ -124,10 +124,10 @@ img {
     height: auto;
 }
 a {
-    color: #fffff3;
+    color: rgb(177, 49, 219);
 }
 a:hover {
-    color: #ffffff;
+    color: rgb(219, 148, 243);
 }
 .hidden {
     display: none !important;
@@ -177,7 +177,7 @@ a:hover {
     outline: none;
 }
 .subtitle a {
-    color: #b9b9b9;
+    color: rgb(177, 49, 219);
     text-decoration: none;
 }
 
@@ -203,12 +203,12 @@ a:hover {
     height: 63px;
     background: url(../img/button_dark_square.png) no-repeat center center scroll;
     line-height: 58px;
-    color:rgba(255,255,255,0.67);
+    color:rgb(177, 49, 219);
     text-shadow:0 0 8px rgb(0, 0, 0);
     cursor: pointer;
 }
 .button.square:hover {
-    color:rgba(255,255,255,1);
+    color:rgb(219, 148, 243);
     background: url(../img/button_dark_square_hover.png) no-repeat center center scroll;
 }
 .button.dark {
@@ -253,22 +253,22 @@ html[lang="de"] .button.dark[data-i18n="Add files"]:hover {
     transition: color 200ms, text-shadow 200ms, background 200ms, background-image 200ms;
 }
 .button.huge .icon.queue {
-    filter: drop-shadow(0.018cm 0.031cm 0 #ffffff);
+    filter: drop-shadow(0.018cm 0.031cm 0 rgb(219, 148, 243));
 }
 .button.huge {
     display: block;
     width:317px;
     height:91px;
-    background: url(../img/button_huge.png) no-repeat center center scroll;
+    background: url(../MOD/custom_button/button_huge.png) no-repeat center center scroll;
     text-align: center;
     color:#363a3c;
     font-size: 2em;
     line-height: 86px;
     cursor: pointer;
-    text-shadow: 0.018cm 0.031cm 0 #ffffff;
+    text-shadow: 0.018cm 0.031cm 0 rgb(219, 148, 243);
 }
 .button.huge.ets {
-    background: url(../img/button_huge_ets.png) no-repeat center center scroll;
+    background: url(../MOD/custom_button/button_huge_ets.png) no-repeat center center scroll;
 }
 .button.huge .effect {
     content: '';
@@ -281,10 +281,10 @@ html[lang="de"] .button.dark[data-i18n="Add files"]:hover {
     pointer-events: none;
 }
 .button.huge:hover {
-    background: url(../img/button_huge_hover.png) no-repeat center center scroll;
+    background: url(../MOD/custom_button/button_huge_hover.png) no-repeat center center scroll;
 }
 .button.huge.ets:hover {
-    background: url(../img/button_huge_hover_ets.png) no-repeat center center scroll;
+    background: url(../MOD/custom_button/button_huge_hover_ets.png) no-repeat center center scroll;
 }
 .button.huge .glow_1 {
     background: url(../img/button_huge_light_1.png) no-repeat center center scroll;
@@ -340,7 +340,7 @@ html[lang="de"] .button.dark[data-i18n="Add files"]:hover {
     margin-top: -4px;
 }
 .button.huge.popup {
-    background: url(../img/button_huge_popup.png) no-repeat center center scroll;
+    background: url(../MOD/custom_button/button_huge_popup.png) no-repeat center center scroll;
     width: 198px;
     height: 63px;
     font-size: 1.1em;
@@ -351,13 +351,13 @@ html[lang="de"] .button.dark[data-i18n="Add files"]:hover {
     cursor: not-allowed !important;
 }
 .button.huge.disabled:hover {
-    background: url(../img/button_huge.png) no-repeat center center scroll !important;
+    background: url(../MOD/custom_button/button_huge.png) no-repeat center center scroll !important;
 }
 .button.huge.popup.disabled:hover {
-    background: url(../img/button_huge_popup.png) no-repeat center center scroll !important;
+    background: url(../MOD/custom_button/button_huge_popup.png) no-repeat center center scroll !important;
 }
 .button.huge.popup:hover {
-    background: url(../img/button_huge_popup_hover.png) no-repeat center center scroll;
+    background: url(../MOD/custom_button/button_huge_popup_hover.png) no-repeat center center scroll;
 }
 .button.huge.popup .effect {
     content: '';
@@ -558,8 +558,8 @@ html[lang="de"] .button.dark[data-i18n="Add files"]:hover {
     height: 100%;
     width: 160px;
     position: absolute;
-    left: 15px;
-    top: 0;
+    left: 13px;
+    top: 2px;
 }
 .icon.caret {
     background: url(../MOD/custom_icon/icon_caret_gray_closed.png) no-repeat center center;
@@ -631,7 +631,7 @@ body [data-tooltip]::before {
     line-height: 1em;
     font-size: 1em;
     font-family: "Bender-Bold";
-    color: #fffff3;
+    color: rgb(177, 49, 219);
     background: url(../img/user_menu_gradient.png) no-repeat top left, linear-gradient(to top, #16191a 0%,#1d1f21 100%), #16191a;
     background-size: contain;
     outline: 1px solid #505456;
@@ -857,7 +857,7 @@ body [data-tooltip-side="bottom-right"]:focus::after {
     height: 27px;
     position: relative;
     display: inline-block;
-    color: #fffff3;
+    color: rgb(177, 49, 219);
     text-shadow: 0 0 8px rgb( 0, 0, 0 );
     font-size: 1.5em;
     line-height: 1.5em;
@@ -916,11 +916,11 @@ html[lang="pt"] #head .wrap .menu>ul>li {
     cursor: pointer;
 }
 #head .wrap .menu>ul>li:not(.out):hover {
-    color: #ffffff;
+    color: rgb(219, 148, 243);
     text-shadow: 0 0 18px rgb( 255, 255, 243 ), 0 0 0.235cm rgba( 255, 254, 224, 0.75 );
 }
 #head .wrap .menu>ul>li.active {
-    color: #ffffff;
+    color: rgb(219, 148, 243);
     text-shadow: 0 0 18px rgb( 255, 255, 243 ), 0 0 0.235cm rgba( 255, 254, 224, 0.75 );
 }
 #head .wrap .menu>ul>li.active:after,
@@ -945,7 +945,7 @@ html[lang="pt"] #head .wrap .menu>ul>li {
     transition: background 200ms;
 }
 #head .wrap .menu>ul>li.out a.item:hover {
-    color: #ffffff;
+    color: rgb(219, 148, 243);
     text-shadow: 0 0 18px rgb( 255, 255, 243 ), 0 0 0.235cm rgba( 255, 254, 224, 0.75 );
 }
 #head .wrap .menu>ul>li.out a.item:hover:after {
@@ -3193,7 +3193,7 @@ body.powersaving #important_news .item .text.marquee>span>span {
 
 
 #head>.wrap>.menu>ul>li.blinking:not(.active) {
-    color: #ffffff;
+    color: rgb(219, 148, 243);
     text-shadow: 0 0 18px rgb( 255, 255, 243 ), 0 0 0.235cm rgba( 255, 254, 224, 0.75 );
     animation-duration: 500ms;
     animation-name: blinkingMenu;
@@ -4308,7 +4308,7 @@ body.popup.resizable {
 
 .ratings_stars {
     cursor: pointer;
-    background: url(../img/star.png) no-repeat;
+    background: url(../MOD/custom_icon/star.png) no-repeat;
     display: inline-block;
     height: 39px;
     width: 37px;
@@ -5110,7 +5110,7 @@ body.popup.installation {
     outline-offset: -2px;
     overflow: hidden;
     position: relative;
-    background: url(../img/installation_bg.jpg) no-repeat left top;
+    background: url(../MOD/custom_bg/installation_bg.jpg) no-repeat left top;
     -webkit-app-region: drag;
 }
 
@@ -5209,6 +5209,7 @@ body.popup.installation .foot {
 **************************/
 body.popup.activateCode {
     height: calc(100% - 2px);
+    background: url(../MOD/custom_bg/code_art.jpg);
 }
 body.popup.activateCode #dialog_page {
     position: fixed;
@@ -5311,11 +5312,11 @@ body:after{
             url(../img/checkbox_selected.png)
             url(../img/radio_checked.png)
             url(../img/button_login_hover.png)
-            url(../img/button_huge_popup_hover.png)
-            url(../img/button_huge_hover.png)
-            url(../img/button_huge_ets.png)
-            url(../img/button_huge_hover.png)
-            url(../img/button_huge_hover_ets.png)
+            url(../MOD/custom_button/button_huge_popup_hover.png)
+            url(../MOD/custom_button/button_huge.png)
+            url(../MOD/custom_button/button_huge_ets.png)
+            url(../MOD/custom_button/button_huge_hover.png)
+            url(../MOD/custom_button/button_huge_hover_ets.png)
             url(../img/button_dark_hover.png)
             url(../img/button_dark_square.png)
             url(../img/button_dark_square_hover.png)
