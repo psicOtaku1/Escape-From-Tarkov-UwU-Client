@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <style type="text/css" media="all">@import "css/style.css?ver=0.1.0";</style>
+    <title>Battlestate Games Launcher - Progress</title>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','GTM-P664RGF');</script>
+    <!-- End Google Tag Manager -->
+
+</head>
+<body class="popup progress">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P664RGF"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<div id="window_buttons">
+    <div class="close"></div>
+</div>
+<div id="progress_bar_page">
+        <div class="content">
+            <div class="title" data-i18n="progress_msg_0"></div>
+            <div class="progress">
+                <div class="slider">
+                    <div class="slider_ender"></div>
+                    <div class="effect glow_1"></div>
+                    <div class="effect glow_2"></div>
+                    <div class="effect glow_3"></div>
+                    <div class="slider_animation hidden"><div class="light"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="js/plugins/moment-with-locales.min.js"></script>
+        <script type="text/javascript" src="js/plugins/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="js/plugins/select2/js/select2.min.js"></script>
+        <script type="text/javascript" src="js/plugins/i18next.min.js"></script>
+        <script type="text/javascript" src="js/plugins/jquery-i18next.min.js"></script>
+        <script type="text/javascript" src="js/plugins/jquery.serializejson.min.js"></script>
+        <script type="text/javascript" src="js/plugins/slick/slick.min.js"></script>
+        <script type="text/javascript" src="js/conf.js?ver=0.0.1"></script>
+        <script type="text/javascript" src="js/launcher.js?ver=0.0.1"></script>
+        <script type="text/javascript" src="js/global.js?ver=0.0.1"></script>
+        <script type="text/javascript">
+		    $(document).ready( function () {
+			    try {
+				    whenJqueryFuncAvailable('localize',  function() {
+					    $("body").localize();
+				    });
+			    } catch (e) {
+				    console.log(e);
+			    }
+		    });
+
+		    function setMessageId(code) {
+			    try {
+                    $('#progress_bar_page .title').attr('data-i18n', '[html]progress_msg_'+code).html(i18next.t('progress_msg_'+code));
+			    } catch (e) {
+				    console.log(e);
+			    }
+		    }
+        </script>
+    </div>
+</body>
+</html>

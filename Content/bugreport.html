@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <style type="text/css" media="all">@import "css/style.css?ver=0.1.0";</style>
+    <title>Battlestate Games Launcher - Report bug</title>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','GTM-P664RGF');</script>
+    <!-- End Google Tag Manager -->
+
+</head>
+<body class="popup resizable">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P664RGF"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<div id="window_buttons">
+    <div class="minimize"></div>
+    <div class="maximize"></div>
+    <div class="close"></div>
+</div>
+<div id="page" class="bugreport">
+    <div class="head">
+        <div class="container">
+            <div class="row">
+                <h2 data-i18n="Report bug" class="inline"></h2>
+
+            </div>
+            <div class="row flex">
+                <div class="col">
+                    <label for="bug_category" data-i18n="Category*"></label>
+                    <select id="bug_category" class="" name="bug_category"></select>
+                </div>
+                <div class="col">
+                    <p data-support-warning class="warning inline"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="message">
+        <div class="container hidden">
+            <div class="row">
+                <label for="bug_text" data-i18n="Please describe your problem*"></label>
+                <div class="textarea">
+                    <textarea id="bug_text" class="block input" maxlength="1000"></textarea>
+                    <div class="block background">
+                        <div class="left"></div>
+                        <div class="middle"></div>
+                        <div class="right"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="sub-head">
+                    <div data-i18n="Reproduce steps"></div>
+                    <div class="button" data-step-add><i class="icon plus"></i></div>
+                </div>
+                <div class="repeatSteps" data-step-list></div>
+            </div>
+            <div class="row hidden">
+                <div class="sub-head">
+                    <div data-i18n="Recommended to you"></div>
+                </div>
+                <div>
+                    <ul data-search-results></ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="sub-head">
+                    <div data-i18n="Attached files"></div>
+                    <div id="add_files" class="button"><i class="icon plus"></i></div>
+                </div>
+            </div>
+            <div class="row">
+                <div>
+                    <input type="checkbox" name="addClientLogs:boolean" id="addClientLogsCheckbox" checked="checked" />
+                    <label for="addClientLogsCheckbox"><span class="inline" data-i18n="filesHeader_game_logs"></span></label>
+                </div>
+                <div>
+                    <input type="checkbox" name="addLauncherLogs:boolean" id="addLauncherLogsCheckbox" checked="checked" />
+                    <label for="addLauncherLogsCheckbox"><span class="inline" data-i18n="filesHeader_launcher_logs"></span></label>
+                </div>
+                <div>
+                    <ul data-selected-files></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="foot">
+        <div class="container">
+            <div class="row">
+                <div class="size_info">
+                    <div class="top inline">
+                        <div class="current inline">
+                            <span id="size_info_current" class="value">0</span> <span class="dimension" data-i18n="MB"></span>
+                        </div>
+                        <div class="limit">
+                            <span id="size_info_limit" class="value"></span> <span class="dimension" data-i18n="MB"></span>
+                        </div>
+                    </div>
+                    <div progress-bar>
+                        <div class="slider">
+                            <div class="slider_ender"></div>
+                            <div class="effect glow_1"></div>
+                            <div class="effect glow_2"></div>
+                            <div class="effect glow_3"></div>
+                        </div>
+                    </div>
+                    <div class="fileTypes inline">
+                        <span id="fileTypes" data-i18n="allowedFilesLabel"></span>
+                    </div>
+                </div>
+                <div class="collectInfo">
+                    <input type="checkbox" name="collectInfoCheckbox:boolean" id="collectInfoCheckbox" />
+                    <label for="collectInfoCheckbox"><span class="inline" data-i18n="Collect server availability info"></span></label>
+                </div>
+            </div>
+            <div class="row">
+                <div id="submit_report" class="button huge popup fix-right pull-right">
+                    <span data-i18n="Submit"></span>
+                    <div class="effect glow_1"></div>
+                    <div class="effect glow_2"></div>
+                </div>
+                <div class="button dark fix-left pull-right" onclick="launcher.close()" data-i18n="Close"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loading"><img src="MOD/custom_load/loader.gif" alt="..." /></div>
+
+    <script type="text/javascript" src="js/plugins/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/plugins/select2/js/select2.min.js"></script>
+    <script type="text/javascript" src="js/plugins/i18next.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery-i18next.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery.lazyload.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery.serializejson.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery.mask.min.js"></script>
+    <script type="text/javascript" src="js/plugins/slick/slick.min.js"></script>
+    <script type="text/javascript" src="js/conf.js?ver=0.0.1"></script>
+    <script type="text/javascript" src="js/launcher.js?ver=0.0.1"></script>
+    <script type="text/javascript" src="js/global.js?ver=0.0.1"></script>
+    <script type="text/javascript" src="js/bugreport.js?ver=0.0.1"></script>
+    <link href="js/plugins/select2/css/select2.min.css" rel="stylesheet" />
+    <link href="js/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+    <style>
+        #page.bugreport label.error, #page.bugreport .label.error {
+            color: #df3b25;
+        }
+        #page>#loading {
+            bottom: 68px;
+        }
+    </style>
+</div>
+</body>
+</html>

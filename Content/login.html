@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <style type="text/css" media="all">@import "css/style.css?ver=0.0.1";</style>
+    <title>Battlestate Games Launcher - Login</title>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','GTM-P664RGF');</script>
+    <!-- End Google Tag Manager -->
+</head>
+<body class="login">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P664RGF"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<div id="login_page">
+    <div id="window_buttons">
+        <div class="minimize"></div>
+        <div class="close"></div>
+    </div>
+    <form id="LauncherLogin">
+
+        <div class="head">
+            <div class="logo"></div>
+
+            <div id="error_login" data-error-container class="hidden allow_selecting">
+                <div class="container">
+                    <div class="text allow_selecting"></div>
+                </div>
+            </div>
+
+            <div class="fields">
+                <div class="container login">
+                    <label for="email" class="hidden">E-mail:</label>
+                    <input tabindex="1" id="email" data-i18n="[placeholder]E-mail or login" placeholder="" class="item" type="text">
+
+                    <div class="pass-cont">
+                        <label for="password" class="hidden">Password:</label>
+                        <input tabindex="2" id="password" data-i18n="[placeholder]Password" placeholder="" class="item" type="password">
+                        <i class="icon eye eye-closed"></i>
+                    </div>
+
+                    <div class="remember_me item">
+                        <input tabindex="3" type="checkbox" id="remember" onclick="launcherSetRemember(this)" class="item" >
+                        <label for="remember" class="item" data-i18n="Keep me logged in"></label>
+                    </div>
+
+                    <div class="captcha item hidden">
+                        <input type="text" name="g-recaptcha-response" id="g-recaptcha-form" class="hidden" >
+                        <label for="g-recaptcha-form" class="hidden"></label>
+                        <div class="g-recaptcha" data-theme="dark" data-sitekey="6LexEI4UAAAAAIFtNZALcloZfEgHhB8rEUqC1LwV"></div>
+                    </div>
+                </div>
+                <div class="container secondfactor hidden">
+                    <div class="back_button"><i class="icon back"></i><span data-i18n="Back"></span></div>
+                    <div class="item" >
+                        <div class="light" data-i18n="E-mail verification"></div>
+                        <div class="text small" data-i18n="We've sent a security code to your e-mail address"></div>
+                        <div class="text small" data-i18n="Enter the code below."></div>
+                    </div>
+
+                    <label for="deviceid" class="hidden"><span data-i18n="Device ID"></span>:</label>
+                    <input tabindex="1" id="deviceid" data-i18n="[placeholder]Device ID" placeholder="" class="item" type="text">
+                    <div class="hidden" data-i18n="s"></div>
+                </div>
+                <div class="container smsFormPhone hidden">
+                    <div class="back_button"><i class="icon back"></i><span data-i18n="Back"></span></div>
+                    <div class="item" >
+                        <div class="light" data-i18n="Account verification"></div>
+                        <div class="text small" data-i18n="An activation code will be sent to the specified phone"></div>
+                    </div>
+
+                    <label for="phoneNumber" class="hidden"><span data-i18n="Phone number"></span>:</label>
+                    <input tabindex="1" id="phoneNumber" placeholder="" class="item" type="text">
+                    <div class="text small spacer hidden">
+                        <span data-i18n="The code will be sent to "></span><span data-phone-number-result></span>
+                    </div>
+                </div>
+                <div class="container smsFormCode hidden">
+                    <div class="back_button"><i class="icon back"></i><span data-i18n="Back"></span></div>
+                    <div class="item" >
+                        <div class="light" data-i18n="Account verification"></div>
+                        <div class="text small" data-i18n="Enter the received code from SMS"></div>
+                        <div class="text small spacer hidden" data-code-expire></div>
+                    </div>
+
+                    <label for="phoneCode" class="hidden"><span data-i18n="Enter code"></span>:</label>
+                    <input tabindex="1" id="phoneCode" placeholder="" class="item" type="text">
+                    <div class="hidden" data-i18n="s"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="foot">
+            <div class="container">
+                <div id="loading" class="hidden"><img src="MOD/custom_load/loader.gif" alt="..." /></div>
+                <div id="footContent">
+                    <button tabindex="4" class="button huge login" type="submit">
+                        <i class="icon login"></i>
+                        <span id="loginButtonText" data-i18n="Authorize"></span>
+                        <span id="loginButtonCountdown"></span>
+                        <div class="effect glow_1"></div>
+                        <div class="effect glow_2"></div>
+                    </button>
+                    <div class="links">
+                        <a class="out" data-link="registration" tabindex="5" href="https://www.escapefromtarkov.com/registration?logout=1" data-i18n="Create account"></a>
+                        <a class="out" data-link="resetPassword" tabindex="6" href="https://www.escapefromtarkov.com/reset-password" data-i18n="Unable to sign in?"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script type="text/javascript" src="js/plugins/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/plugins/select2/js/select2.min.js"></script>
+    <script type="text/javascript" src="js/plugins/i18next.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery-i18next.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery.serializejson.min.js"></script>
+    <script type="text/javascript" src="js/plugins/slick/slick.min.js"></script>
+    <script type="text/javascript" src="js/plugins/libphonenumber-max-1.7.6.js"></script>
+    <script type="text/javascript" src="js/conf.js?ver=0.0.1"></script>
+    <script type="text/javascript" src="js/launcher.js?ver=0.0.1"></script>
+    <script type="text/javascript" src="js/global.js?ver=0.0.1"></script>
+    <script type="text/javascript" src="js/error.js?ver=0.0.1"></script>
+    <script type="text/javascript" src="js/login.js?ver=0.0.1"></script>
+
+
+</div>
+</body>
+</html>

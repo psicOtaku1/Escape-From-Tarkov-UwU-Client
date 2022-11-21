@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <style type="text/css" media="all">@import "css/style.css?ver=0.1.0";</style>
+    <title>Battlestate Games Launcher - Progress</title>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','GTM-P664RGF');</script>
+    <!-- End Google Tag Manager -->
+
+</head>
+<body class="popup installation">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P664RGF"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<div id="window_buttons">
+    <div class="minimize"></div>
+    <div class="close"></div>
+</div>
+<div id="installation_page">
+    <div class="side"></div>
+    <div class="content">
+        <div class="container">
+            <h2 data-i18n="Escape from Tarkov installation"></h2>
+            <div class="install_dir">
+                <div class="head" data-i18n="Installation path"></div>
+                <div class="cont">
+                    <p><span id="installationPath" class="allow_selecting"></span><span class="change_but pull-right" data-i18n="Change" onclick="selectGameFolder(this)"></span></p>
+                    <p><span data-i18n="Required"></span> <span id="requiredFreeSpace"></span> <span id="requiredFreeSpaceDimension"></span>, <span data-i18n="available"></span> <span id="availableSpace"></span> <span id="availableSpaceDimension"></span></p>
+                </div>
+            </div>
+            <div class="game_ui_language">
+                <div class="head" data-i18n="Default interface language"></div>
+                <div class="cont">
+                    <p class="select2 lang">
+                        <label for="game_ui_language"></label>
+                        <select id="game_ui_language" class="hidden" name="game_ui_language">
+                            <option value="ru">Русский</option>
+                            <option value="en">English</option>
+                            <option value="de">Deutsch</option>
+                        </select>
+                    </p>
+                </div>
+            </div>
+            <div class="allow_auto_update">
+                <div class="cont">
+                    <p class="checkbox">
+                        <input type="checkbox" name="enableGameAutoUpdate:boolean" id="enableGameAutoUpdate" onchange="try{launcher.setSettings( JSON.stringify( $(this).serializeJSON({checkboxUncheckedValue: 'false', parseBooleans: true, parseAll: true}) ) );} catch(e){console.log(e)}" />
+                        <label for="enableGameAutoUpdate" data-i18n="Allow automatic game client updates"></label>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="foot">
+        <div class="container">
+            <div class="button huge popup fix-right pull-right" onclick="if(!$(this).hasClass('disabled')){launcher.ok()}">
+                <span class="nodrag" data-i18n="Install"></span>
+                <div class="nodrag effect glow_1"></div>
+                <div class="nodrag effect glow_2"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="js/plugins/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/plugins/select2/js/select2.min.js"></script>
+    <script type="text/javascript" src="js/plugins/i18next.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery-i18next.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery.serializejson.min.js"></script>
+    <script type="text/javascript" src="js/plugins/slick/slick.min.js"></script>
+    <script type="text/javascript" src="js/conf.js?ver=0.0.1"></script>
+    <script type="text/javascript" src="js/launcher.js?ver=0.0.1"></script>
+    <script type="text/javascript" src="js/global.js?ver=0.0.1"></script>
+    <link href="js/plugins/select2/css/select2.min.css" rel="stylesheet" />
+    <script type="text/javascript">
+		$(document).ready( function () {
+			try {
+				$('select').select2(window.s2opt);
+				whenJqueryFuncAvailable('localize',  function() {
+					$("body").localize();
+				});
+			} catch (e) {
+				console.log(e);
+			}
+		});
+
+		function updateInstallationInfo (installationPath, requiredFreeSpace, availableSpace) {
+
+			if(availableSpace < requiredFreeSpace) {
+				$('#installation_page .foot .button.huge').addClass('disabled');
+				$('#requiredFreeSpace').parent().addClass('error');
+			} else {
+				$('#installation_page .foot .button.huge').removeClass('disabled');
+				$('#requiredFreeSpace').parent().removeClass('error');
+			}
+
+			$('#installationPath').text(installationPath.replace(window.game_dir_pregmatch,""));
+
+            if(0>requiredFreeSpace) {
+	            requiredFreeSpace = i18next.t("unknown");
+            } else {
+	            requiredFreeSpace = renderSize('#requiredFreeSpace', requiredFreeSpace);
+            }
+            $('#requiredFreeSpace').text(requiredFreeSpace);
+
+			if(0>availableSpace) {
+				availableSpace = i18next.t("unknown");
+			} else {
+				availableSpace = renderSize('#availableSpace', availableSpace);
+            }
+            $('#availableSpace').text(availableSpace);
+
+        }
+
+		function renderSize(selector, bytes) {
+			try {
+				if (bytes < 1048576) { //KB
+					$(selector+'Dimension').text(i18next.t("KB")).attr('data-i18n', "KB");
+					return (bytes / 1024).toFixed(0);
+				} else if(bytes < 1073741824) { //MB
+					$(selector+'Dimension').text(i18next.t("MB")).attr('data-i18n', "MB");
+					return (bytes / 1048576).toFixed(0);
+				} else { //GB
+					$(selector+'Dimension').text(i18next.t("GB")).attr('data-i18n', "GB");
+					return (bytes / 1073741824).toFixed(0);
+				}
+			} catch(e) {
+				console.log(e);
+			}
+		}
+    </script>
+</div>
+</body>
+</html>

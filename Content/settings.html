@@ -1,0 +1,109 @@
+<div class="container small">
+    <form id="settings" onchange="try{launcher.setSettings( JSON.stringify( $(this).serializeJSON(window.serializeConf) ) );} catch(e){console.log(e)}" onsubmit="return false;">
+
+        <div class="title" data-i18n="Launcher settings"></div>
+
+        <p class="select2 lang">
+            <label for="language" data-i18n="Launcher language:"></label>
+            <select id="language" name="language">
+            </select>
+        </p>
+
+        <div class="startup">
+            <p class="checkbox">
+                <input type="checkbox" name="launchOnStartup:boolean" id="launchOnStartup" onchange="if(!this.checked) { $('#launchMinimized').attr('disabled','disabled'); } else { $('#launchMinimized').removeAttr('disabled'); }"/>
+                <label for="launchOnStartup" data-i18n="Start the launcher on computer startup"></label>
+            </p>
+
+            <p class="checkbox">
+                <input type="checkbox" name="launchMinimized:boolean" id="launchMinimized" disabled />
+                <label for="launchMinimized" data-i18n="Start the launcher minimized to the task bar"></label>
+            </p>
+        </div>
+
+        <p class="select2">
+            <label for="closeBehavior" data-i18n="When I close the Launcher window:"></label>
+            <select id="closeBehavior" name="closeBehavior">
+                <option value="0" data-i18n="Minimize the Launcher window to system tray"></option>
+                <option value="1" data-i18n="Exit the Launcher"></option>
+            </select>
+        </p>
+
+        <p class="select2 gamestart">
+            <label for="gameStartBehavior" data-i18n="When I launch the Game:"></label>
+            <select id="gameStartBehavior" name="gameStartBehavior">
+                <option value="0" data-i18n="Keep the Launcher window open"></option>
+                <option value="1" data-i18n="Minimize the Launcher window"></option>
+                <option value="2" data-i18n="Minimize the Launcher window to the system tray"></option>
+                <option value="3" data-i18n="Exit the Launcher completely"></option>
+            </select>
+        </p>
+
+        <div class="security">
+            <p>
+                <span class="label" data-i18n="Security:"></span>
+            </p>
+
+            <p class="checkbox">
+                <input type="checkbox" name="saveLogin:boolean" id="saveLogin" onchange="if(!this.checked) { $('#keepLoggedIn').attr('disabled','disabled'); } else { $('#keepLoggedIn').removeAttr('disabled'); }"/>
+                <label for="saveLogin" data-i18n="Remember login"></label>
+            </p>
+
+            <p class="checkbox">
+                <input type="checkbox" name="keepLoggedIn:boolean" id="keepLoggedIn" />
+                <label for="keepLoggedIn" data-i18n="Keep me logged in"></label>
+            </p>
+        </div>
+
+        <div class="directory">
+            <p>
+                <span class="label" data-i18n="Game directory:"></span>
+            </p>
+            <p>
+                <span id="gameDir" data-open-directory></span>
+            </p>
+            <p class="select-folder" onclick="selectGameFolder(this)">
+                <i class="icon folder"></i><span class="text" data-i18n="Set the path to existing game installation"></span>
+            </p>
+        </div>
+
+        <div class="directory">
+            <p>
+                <span class="label" data-i18n="Temp directory:"></span>
+            </p>
+            <p>
+                <span id="tempDir" data-open-directory></span>
+            </p>
+            <p class="select-folder" onclick="selectTempFolder(this)">
+                <i class="icon folder"></i><span class="text" data-i18n="SetTempDirPath"></span>
+            </p>
+            <p class="select-folder" onclick="clearTempFolder(this)">
+                <i class="icon resetLight"></i><span class="text" data-i18n="CleanTempDir"></span>
+            </p>
+        </div>
+
+        <p>
+            <span class="label" data-i18n="Updates:"></span>
+        </p>
+
+        <p class="checkbox">
+            <input type="checkbox" name="enableGameAutoUpdate:boolean" id="enableGameAutoUpdate" />
+            <label for="enableGameAutoUpdate" data-i18n="Enable automatic updates of the Game"></label>
+        </p>
+
+        <p class="input">
+            <span class="label inline" data-i18n="Maximum download speed"></span>
+            <input class="inline short right" type="number" min="0" name="maxDownloadSpeed" id="maxDownloadSpeed" value="0" disabled="disabled" onkeyup="this.value=parseInt(this.value)||0;if(parseInt(this.value)<0){this.value=0;};if(parseInt(this.value)===0) { $(this).next().attr('data-i18n', 'unlimited').localize() } else { $(this).next().attr('data-i18n', 'KB/sec').localize(); }" />
+            <span class="speed inline" data-i18n="KB/sec"></span>
+            <label for="maxDownloadSpeed" class="hidden"></label>
+        </p>
+
+        <div class="volume">
+            <p class="input">
+                <label for="volumeValue" class="label row"><span data-i18n="Notification sound level:"></span> <span data-value="volume"></span></label>
+                <input id="volumeValue" name="volumeValue" type="range" data-min="0" data-max="100" />
+            </p>
+        </div>
+
+    </form>
+</div>

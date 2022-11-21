@@ -1,0 +1,229 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <style type="text/css" media="all">@import "css/style.css?ver=0.1.0";</style>
+    <title>Battlestate Games Launcher - Dialog</title>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','GTM-P664RGF');</script>
+    <!-- End Google Tag Manager -->
+
+</head>
+<body class="popup">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P664RGF"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+    <div id="window_buttons">
+        <div class="close"></div>
+    </div>
+    <div id="dialog_page">
+        <div class="content">
+            <div class="container">
+                <h2 data-i18n="User action required"></h2>
+            </div>
+            <div id="message">
+                <div class="container">
+                    <div class="text allow_selecting"></div>
+                </div>
+            </div>
+        </div>
+        <div class="foot">
+            <div class="container">
+                <div class="button dark fix-left pull-left" onclick="launcher.close()"></div>
+                <div class="button huge hidden popup fix-right pull-right">
+                    <span class="nodrag"></span>
+                    <div class="nodrag effect glow_1"></div>
+                    <div class="nodrag effect glow_2"></div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="js/plugins/moment-with-locales.min.js"></script>
+        <script type="text/javascript" src="js/plugins/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="js/plugins/select2/js/select2.min.js"></script>
+        <script type="text/javascript" src="js/plugins/i18next.min.js"></script>
+        <script type="text/javascript" src="js/plugins/jquery-i18next.min.js"></script>
+        <script type="text/javascript" src="js/plugins/jquery.serializejson.min.js"></script>
+        <script type="text/javascript" src="js/plugins/slick/slick.min.js"></script>
+        <script type="text/javascript" src="js/conf.js?ver=0.0.1"></script>
+        <script type="text/javascript" src="js/launcher.js?ver=0.0.1"></script>
+        <script type="text/javascript" src="js/global.js?ver=0.0.1"></script>
+        <script type="text/javascript" src="js/error.js?ver=0.0.1"></script>
+        <script type="text/javascript">
+            var okButton = 0,
+                cancelButton = 0,
+                banTimeLeft = 0;
+
+            /**
+             * code formatting rules:
+             * 1 digit: 1 - default dialog (dialog type)
+             * 2 digit: ok button state (0=hidden, 1=ok, 2=continue, 3=yes)
+             * 3 digit: cancel button (0=hidden, 1=cancel, 2=close, 3=no)
+             * 4 digit: reserved
+             * 5 digit: reserved
+             * 6-8 digit: message code (001-999)
+             *
+             * in js function dialog(data)
+             * data is JSON = {
+             *     code: code
+             *     args: []
+             *     exception: Exception
+             * }
+             *
+             * more info in Eft.Launcher.Gui.Wpf.Views.DialogWindowMessage.cs file comment
+             */
+	        function dialog(data) {
+                console.log(data);
+		        parseCode(data);
+	        }
+
+	        function parseCode(data) {
+		        var codestr =  data.code.toString(),
+			        ok = codestr.substr(1, 1),
+			        cancel = codestr.substr(2, 1),
+			        msgcode = codestr.substr(5, 3);
+
+                whenJqueryFuncAvailable('localize',  function() {
+                    $("body").localize();
+                    renderDialog(msgcode, data.args);
+                    setCancelButton(cancel);
+                    setOkbutton(ok);
+                    if(data.exception !== null) {
+                        $('#dialog_page').attr('id', 'error_page');
+                        $('#message').attr('data-error-container', '');
+                        error(data);
+                    }
+                });
+	        }
+
+            function renderDialog(code, args) {
+                try {
+                    var dialog_label = 'dialog_msg_'+code,
+                        dialog_text = i18next.t(dialog_label, {args: args}),
+                        args_json = JSON.stringify( {args: args} ),
+                        paragraph = $('<div>'+dialog_text+'</div>');
+
+                    paragraph.attr('data-i18n', '[html]'+dialog_label);
+                    paragraph.attr('data-i18n-options', args_json);
+
+                    $('#message .text').html(paragraph);
+
+                    if(args && args[0]>0) {
+                        if($('#message .text [data-countdown]').length) {
+                            initCountDown(dialog_label, args[0]);
+                        }
+                    }
+                } catch(e) {
+                    console.log(e);
+                }
+            }
+
+	        function setOkbutton(state) {
+	            var button = $('div .foot .huge');
+		        state = parseInt(state);
+		        window.okButton = state;
+		        switch (state) {
+			        case 0:
+				        break;
+			        case 1:
+                        button.find('span').attr('data-i18n', 'Ok').text(i18next.t('Ok'));
+                        button.removeClass('hidden');
+				        break;
+			        case 2:
+                        button.find('span').attr('data-i18n', 'Continue').text(i18next.t('Continue'));
+                        button.removeClass('hidden');
+				        break;
+			        case 3:
+                        button.find('span').attr('data-i18n', 'Yes').text(i18next.t('Yes'));
+                        button.removeClass('hidden');
+				        break;
+			        case 4:
+                        button.find('span').attr('data-i18n', 'Retry').text(i18next.t('Retry'));
+                        button.removeClass('hidden');
+				        break;
+			        default:
+                        button.find('span').attr('data-i18n', 'Ok').text(i18next.t('Ok'));
+                        button.removeClass('hidden');
+		        }
+
+                button.on('click', function () {
+                    clickOkButton(button);
+                });
+	        }
+
+            function lockOkButton() {
+                $('div .foot .huge').addClass('disabled');
+            }
+
+            function unlockOkButton() {
+                $('div .foot .huge').removeClass('disabled');
+            }
+
+            function clickOkButton($button) {
+                if(!$button.hasClass('disabled')) {
+                    launcher.ok();
+                }
+            }
+
+	        function setCancelButton(state) {
+		        state = parseInt(state);
+                window.cancelButton = state;
+		        switch (state) {
+			        case 0:
+				        $('div .foot .dark').addClass('hidden');
+				        break;
+			        case 1:
+				        $('div .foot .dark').attr('data-i18n', 'Cancel').text(i18next.t('Cancel'));
+				        break;
+			        case 2:
+				        $('div .foot .dark').attr('data-i18n', 'Close').text(i18next.t('Close'));
+				        break;
+			        case 3:
+				        $('div .foot .dark').attr('data-i18n', 'No').text(i18next.t('No'));
+				        break;
+			        case 4:
+				        $('div .foot .dark').attr('data-i18n', 'Skip').text(i18next.t('Skip'));
+				        break;
+			        case 5:
+				        $('div .foot .dark').attr('data-i18n', 'Abort').text(i18next.t('Abort'));
+				        break;
+			        default:
+				        $('div .foot .dark').attr('data-i18n', 'Close').text(i18next.t('Close'));
+		        }
+	        }
+
+	        function initCountDown(dialog_label, banTimeLeft) {
+                var message = i18next.t(dialog_label, {args: [parseInt(banTimeLeft)]}),
+                    $html = $('<div />',{html:message});
+                $html.find('[data-countdown]').html(renderSeconds(parseInt(banTimeLeft)));
+                message = $html.html();
+                $('[data-countdown]').parent().parent().html(message);
+                lockOkButton();
+                new Countdown({
+                    seconds: parseInt(banTimeLeft)-1,  // number of seconds to count down
+                    onUpdateStatus: function(sec){
+                        console.log(sec);
+                        $('[data-countdown]').html(renderSeconds(sec));
+                    }, // callback for each second
+                    onCounterEnd: function(){
+                        console.log('end');
+                        $('[data-countdown]').fadeOut('fast');
+                        clearInterval(window.loginCountdown);
+                        unlockOkButton()
+                    } // final action
+                }).start();
+                banTimeLeft = 0;
+            }
+
+        </script>
+    </div>
+</body>
+</html>

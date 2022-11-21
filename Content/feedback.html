@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <style type="text/css" media="all">@import "css/style.css?ver=0.1.0";</style>
+    <title>Battlestate Games Launcher - Leave feedback</title>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+			new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','GTM-P664RGF');</script>
+    <!-- End Google Tag Manager -->
+
+</head>
+<body class="popup resizable">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P664RGF"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<div id="window_buttons">
+    <div class="minimize"></div>
+    <div class="close"></div>
+</div>
+<div id="feedback_page">
+    <div class="head">
+        <div class="container">
+            <h2 id="title" data-i18n="FeedbackFormTitle"></h2>
+        </div>
+    </div>
+    <div id="message" class="nodrag">
+        <div class="container">
+            <div class="text nodrag">
+                <div class="formInfo">
+                    <div class="hidden"><span data-i18n="Game version"></span>: <span id="FormVersionNote"></span></div>
+                    <div class="hidden"><span data-i18n="Edit the feedback form dated"></span>: <span id="FormDateNote"></span></div>
+                </div>
+                <form id="FeedbackForm" onsubmit="return false;">
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="foot">
+        <div class="container">
+            <div class="button dark fix-left pull-left" onclick="launcher.close()" data-i18n="FeedbackExit"></div>
+
+            <div class="button huge popup fix-right pull-right disabled">
+                <span class="nodrag" data-i18n="FeedbackSend"></span>
+                <div class="nodrag effect glow_1"></div>
+                <div class="nodrag effect glow_2"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loading"><img src="MOD/custom_load/loader.gif" alt="..." /></div>
+
+    <script type="text/javascript" src="js/plugins/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="js/plugins/select2/js/select2.min.js"></script>
+    <script type="text/javascript" src="js/plugins/i18next.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery-i18next.min.js"></script>
+    <script type="text/javascript" src="js/plugins/jquery.serializejson.min.js"></script>
+    <script type="text/javascript" src="js/plugins/slick/slick.min.js"></script>
+    <script type="text/javascript" src="js/conf.js?ver=0.0.1"></script>
+    <script type="text/javascript" src="js/launcher.js?ver=0.0.1"></script>
+    <script type="text/javascript" src="js/global.js?ver=0.0.1"></script>
+    <link href="js/plugins/select2/css/select2.min.css" rel="stylesheet" />
+    <script type="text/javascript">
+	    var form = $('#FeedbackForm'),
+            userChanged = false;
+
+		$(document).ready( function () {
+			whenAvailable('launcher', function () {
+				try {
+					whenJqueryFuncAvailable('localize', function () {
+						$("body").localize();
+
+						launcher.getGameVersion().then(function (game_version) {
+							window.game_version = game_version;
+							$('#FormVersionNote').html(game_version).promise().then(function () {
+								$('#FormVersionNote').parent().hide().removeClass('hidden').fadeIn('fast');
+							});
+						});
+					});
+
+					$(document).on('click', '#feedback_page>.foot .button.huge', function (e) {
+						e.preventDefault();
+						if ($(this).hasClass('disabled')) {
+							console.log('disabled');
+						} else {
+							try {
+								siteRequest('user/feedback/set', $('#FeedbackForm').serializeJSON(window.serializeConf), function (response) {
+									launcher.close();
+								});
+							} catch (e) {
+								console.log(e);
+							}
+						}
+					});
+
+				} catch (e) {
+					console.log(e);
+				}
+			});
+		});
+
+		function renderFeedbackForm(response) {
+			try {
+                if(null !== response) {
+                    launcher.getSettings().then(function( data ) {
+                        data = $.parseJSON(data);
+                        window.lang = data.language;
+                        try {
+                            if (response.datecreated && response.datecreated > 0) {
+                                $('#FormDateNote').html(moment.unix(response.datecreated).format('DD MMMM YYYY')).promise().then(function () {
+                                    $('#FormDateNote').parent().hide().removeClass('hidden').fadeIn('fast');
+                                });
+                            }
+                        } catch (e) {
+                            console.log(e);
+                        }
+                        if (response.data) {
+                            if(Object.keys(response.data[0]['localisation'])[0]) {
+                                window.lang = Object.keys(response.data[0]['localisation'])[0];
+                            }
+                            $('<input type="hidden" name="language" value="' + window.lang + '" />').appendTo(form);
+                            $.each(response.data, function (i, v) {
+                                var itemHtml = renderQuestion(i, v) + '<br>';
+                                $(itemHtml).hide().appendTo(form).show('fast');
+                            });
+                            $("select").select2(window.s2opt);
+                            initStars();
+
+                            $('#FeedbackForm textarea, #FeedbackForm input[type="text"]').keyup(function (e) {
+                                validateSubmit();
+                            });
+                            $('#FeedbackForm [required]').click(function (e) {
+                                validateSubmit();
+                            });
+
+                            $('#FeedbackForm').on('change', function (e) {
+                                if (!window.userChanged) {
+                                    window.userChanged = true;
+                                    $('#feedback_page>.foot .button.huge').removeClass('disabled');
+                                    validateSubmit();
+                                }
+                            });
+                            hideLoader();
+                        }
+                    });
+                }
+			} catch (e) {
+				console.log(e);
+			}
+        }
+
+	    function validateSubmit() {
+		    var wholeFormValid=true;
+			var button = $('#feedback_page>.foot .button.huge');
+		    $('#FeedbackForm textarea, #FeedbackForm input[type="text"]').each(function( index ) {
+		    	var inputValid = true;
+
+                if($(this).val().length < $(this).attr('minlength')) {
+                    inputValid = false;
+                }
+                if($(this).val().length > $(this).attr('maxlength')) {
+                    inputValid = false;
+                }
+                if(inputValid) {
+                	$('label[for="'+$(this).attr('id')+'"]').removeClass('error');
+	                $(this).removeClass('error');
+                } else {
+	                wholeFormValid = false;
+	                $('label[for="'+$(this).attr('id')+'"]').addClass('error');
+	                $(this).addClass('error');
+                }
+		    });
+            $('#FeedbackForm [required]').each(function () {
+                var empty = true,
+                    name = $(this).attr('name');
+                switch ($(this).attr("type")) {
+                    case "checkbox": empty = $('[name="'+name+'"]').is(':checked');
+                        break;
+                    case "radio": empty = $('[name="'+name+'"]').is(':checked');
+                        break;
+                    default: empty = $(this).val().length;
+                        break;
+                }
+                if(empty) {
+                    $('label[for="'+$(this).attr('id')+'"]').removeClass('error');
+                    $(this).removeClass('error');
+                } else {
+                    wholeFormValid = false;
+                    $('label[for="'+$(this).attr('id')+'"]').addClass('error');
+                    $(this).addClass('error');
+                }
+            });
+
+            if(wholeFormValid) {
+	            button.removeClass('disabled');
+            } else {
+	            button.addClass('disabled');
+            }
+	    }
+
+	    // $inputTypes = [
+		//     0 => 'text',
+		//     1 => 'textarea',
+		//     2 => 'radio',
+		//     3 => 'checkbox',
+		//     4 => 'select',
+		//     5 => 'stars',
+	    // ];
+	    // $answersRequired = [2, 3, 4];
+        function renderQuestion(i, question) {
+			var inputRow = '',
+                inputId = 'question_'+question.id,
+				inputName = 'question_'+question.id,
+                isRequired = '',
+                labelId = 'label_'+question.id,
+                values = [],
+                textValue = '',
+                label = '<label class="label" id="'+labelId+'" for="'+inputId+'">'+question['localisation'][window.lang]+'</label>',
+                sLabel = '<span class="label" id="'+labelId+'">'+question['localisation'][window.lang]+'</span>';
+
+            if(question.values.length) {
+	            values = question.values;
+	            try {
+		            textValue = values[0]['answer'];
+	            } catch (e) {
+                    console.log(e);
+	            }
+            }
+
+
+            if(parseInt(question.isRequired)) {
+	            isRequired = 'required';
+	            label = '<label class="label" id="'+labelId+'" for="'+inputId+'">'+question['localisation'][window.lang]+'*</label>';
+		        sLabel = '<span class="label" id="'+labelId+'">'+question['localisation'][window.lang]+'*</span>';
+            }
+
+	        switch(parseInt(question.fieldType)){
+	        	//textarea
+                case 1: inputRow = '<p class="textarea">'+label+'<textarea id="'+inputId+'" class="allow_selecting" name="'+inputName+'" minlength="'+window.feedbackTextAreaMinLen+'" maxlength="'+window.feedbackTextAreaMaxLen+'" '+isRequired+'>'+textValue+'</textarea>'+'</p>';
+                    break;
+		        //radio
+                case 2: inputRow = '<p>'+sLabel+'</p>'+'<p class="radio">'+getRadioList(inputId, question['answers'], values, isRequired)+'</p>';
+                    break;
+		        //checkbox
+                case 3: inputRow = '<p>'+sLabel+'</p>'+'<p class="checkbox">'+getCheckboxList(inputId, question['answers'], values, isRequired)+'</p>';
+                    break;
+		        //select2
+                case 4: inputRow = '<p class="select2">'+label+getSelect2List(inputId, question['answers'], values, isRequired)+'</p>';
+                    break;
+		        //stars
+                case 5: inputRow = '<p>'+sLabel+'</p>'+'<p class="star">'+getStarsList(inputId, textValue, isRequired)+'</p>';
+                    break;
+		        //text
+                default: inputRow = '<p class="input">'+label+'<input class="allow_selecting" type="text" id="'+inputId+'" name="'+inputName+'" value="'+textValue+'" minlength="'+window.feedbackTextInputMinLen+'" maxlength="'+window.feedbackTextInputMaxLen+'" '+isRequired+' />'+'</p>';
+                    break;
+	        }
+
+	        if(window.environment !== 'Production') {
+		        console.log([i, question, inputRow]);
+	        }
+
+	        return inputRow;
+        }
+
+        function getRadioList(inputId, answers, values, isRequired) {
+			var result = '';
+			$.each(answers, function (i, v) {
+				var value = v['id'],
+                    answerId = inputId + '_' + v['id'],
+					attrSelected = '',
+                    label = '<label class="label" for="'+answerId+'">'+v['localisation'][window.lang]+'</label>';
+
+				if(values.length>0) {
+					$.each(values, function (index, selected) {
+						if(parseInt(value) === parseInt(selected.aid)) {
+							attrSelected='checked="checked"';
+						}
+					});
+				}
+
+                result += '<input class="allow_selecting" type="radio" name="'+inputId+'" id="'+answerId+'" value="'+value+'" '+attrSelected+' '+isRequired+' />'+label;
+			});
+            return result;
+        }
+
+        function getStarsList(inputId, value, isRequired) {
+			var result = '<input class="allow_selecting hidden" type="text" name="'+inputId+'" id="'+inputId+'" value="'+value+'" '+isRequired+' />',
+                stars = '';
+
+	        for (var i = 1; i < 6; i++) {
+	        	if(value >= i) {
+			        stars+='<span class="star_'+i+' ratings_stars ratings_vote" data-value="'+i+'"></span>';
+                } else {
+			        stars+='<span class="star_'+i+' ratings_stars" data-value="'+i+'"></span>';
+                }
+	        }
+	        var label = '<label for="'+inputId+'">'+stars+'</label>';
+            return label+result;
+        }
+
+        function initStars() {
+	        $(".ratings_stars").hover(
+
+		        // Handles the mouseOVER
+		        function() {
+			        $(this).prevAll().addBack().addClass("ratings_over");
+		        },
+
+		        // Handles the mouseOUT
+		        function() {
+			        $(this).prevAll().addBack().removeClass("ratings_over");
+		        }
+	        ).hover();
+
+	        $(".ratings_stars").click(function(e){
+	        	$(this).parent().parent().find('input').val($(this).attr("data-value"));
+		        $(this).nextAll().removeClass("ratings_vote");
+		        $(this).prevAll().addBack().addClass("ratings_vote");
+	        });
+        }
+
+        function getCheckboxList(inputId, answers, values, isRequired) {
+			var result = '';
+			$.each(answers, function (i, v) {
+				var value = v['id'],
+                    answerId = inputId + '_' + v['id'],
+					attrSelected = '',
+				    label = '<label class="label" for="'+answerId+'">'+v['localisation'][window.lang]+'</label>';
+
+				if(values.length>0) {
+					$.each(values, function (index, selected) {
+						if(parseInt(value) === parseInt(selected.aid)) {
+							attrSelected='checked="checked"';
+						}
+					});
+				}
+
+                result += '<input class="allow_selecting" type="checkbox" name="'+inputId+'[]" id="'+answerId+'" value="'+value+'" '+attrSelected+' '+isRequired+' />'+label;
+			});
+            return result;
+        }
+
+        function getSelect2List(inputId, answers, values, isRequired) {
+			var result = '';
+			$.each(answers, function (i, v) {
+				var value = v['id'],
+                    attrSelected = '';
+				if(values.length>0) {
+                    $.each(values, function (index, selected) {
+                        if(parseInt(value) === parseInt(selected.aid)) {
+	                        attrSelected='selected="selected"';
+                        }
+                    });
+				}
+                result += '<option value="'+value+'" '+attrSelected+'>'+v['localisation'][window.lang]+'</option>';
+			});
+            return '<select id="'+inputId+'" name="'+inputId+'" '+isRequired+'>'+result+'</select>';
+        }
+    </script>
+</div>
+</body>
+</html>

@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <style type="text/css" media="all">@import "css/style.css?ver=0.1.0";</style>
+    <title>Battlestate Games Launcher - Dialog</title>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+	})(window,document,'script','dataLayer','GTM-P664RGF');</script>
+    <!-- End Google Tag Manager -->
+
+</head>
+<body class="popup resizable">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P664RGF"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+    <div id="window_buttons">
+        <div class="minimize"></div>
+        <div class="close"></div>
+    </div>
+    <div id="license_agreement_page">
+        <div class="head">
+            <div class="container">
+                <p id="totals"></p>
+                <h2 id="title"></h2>
+            </div>
+        </div>
+        <div id="message" class="nodrag">
+            <div class="container">
+                <div class="text allow_selecting"></div>
+            </div>
+        </div>
+        <div class="foot">
+            <div class="container">
+                <div class="button dark fix-left pull-left" onclick="launcher.close()" data-i18n="LegalExit"></div>
+
+                <div class="select2 lang">
+                    <select id="language" name="language" onchange="refreshDoc()">
+                    </select>
+                </div>
+
+                <div class="button huge popup fix-right pull-right">
+                    <span class="nodrag" data-i18n="Accept"></span>
+                    <div class="nodrag effect glow_1"></div>
+                    <div class="nodrag effect glow_2"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading"><img src="MOD/custom_load/loader.gif" alt="..." /></div>
+
+        <script type="text/javascript" src="js/plugins/moment-with-locales.min.js"></script>
+        <script type="text/javascript" src="js/plugins/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="js/plugins/select2/js/select2.min.js"></script>
+        <script type="text/javascript" src="js/plugins/i18next.min.js"></script>
+        <script type="text/javascript" src="js/plugins/jquery-i18next.min.js"></script>
+        <script type="text/javascript" src="js/plugins/jquery.serializejson.min.js"></script>
+        <script type="text/javascript" src="js/plugins/slick/slick.min.js"></script>
+        <script type="text/javascript" src="js/conf.js?ver=0.0.1"></script>
+        <script type="text/javascript" src="js/launcher.js?ver=0.0.1"></script>
+        <script type="text/javascript" src="js/global.js?ver=0.0.1"></script>
+        <link href="js/plugins/select2/css/select2.min.css" rel="stylesheet" />
+        <script type="text/javascript">
+	        $(document).ready( function () {
+		        whenAvailable('launcher', function () {
+			        try {
+				        var okButton = $('#license_agreement_page>.foot .button.huge');
+				        whenJqueryFuncAvailable('localize', function () {
+					        $("body").localize();
+				        });
+				        $(document).on('click', '#license_agreement_page>.foot .button.huge', function (e) {
+					        e.preventDefault();
+					        if ($(this).hasClass('disabled')) {
+						        console.log('disabled');
+					        } else {
+						        try {
+							        submitAgree(
+								        window.settings.aid,
+								        parseInt($('#license_agreement_page').attr('data-legal-id'))
+							        );
+						        } catch (e) {
+							        console.log(e);
+						        }
+					        }
+				        });
+				        $('#message').bind('scroll', function (e) {
+					        var elem = $(e.currentTarget);
+					        if (elem.scrollTop() + elem.innerHeight() >= elem[0].scrollHeight) {
+						        okButton.removeClass('disabled');
+						        $('#message').unbind('scroll');
+					        }
+				        });
+                        $.each(window.langs, function(code, title) {
+                            $('#language')
+                                    .append($("<option></option>")
+                                            .attr("value",code)
+                                            .text(title));
+                        });
+			        } catch (e) {
+				        console.log(e);
+			        }
+		        });
+	        });
+
+
+	        function refreshDoc() {
+		        getLegalRequiredDoc(window.settings.aid, $('#language').val());
+            }
+
+	        function getLegalRequiredDoc(aid, lang) {
+	        	var customDocument = getUrlParameter('document');
+	        	if(customDocument.length) {
+                    loadLegalDoc(customDocument, lang);
+                } else {
+			        if(window.lang !== lang) {
+				        launcher.setSettings(JSON.stringify({language: lang}));
+			        }
+			        siteRequest('user/legal/get', {aid: aid, language: lang}, successCb, errorCb);
+                }
+	        }
+
+	        function successCb(result) {
+                result = JSON.parse(result);
+                if(result) {
+                    try {
+                        $('#title').html(result.localisation.typeName);
+                        var legalText = '<p><strong>'+result.localisation.lastUpdate+' '+result.localisation.updateDate+'</strong></p>'
+                                +result.localisation.text;
+                        $('#message .text').html(legalText);
+                        $('#license_agreement_page').attr('data-legal-id', result.id);
+                        if(typeof result !== 'undefined' && result.totals.length && $('#totals').length) {
+                            $('#totals').html(i18next.t('legal_totals', {args: result.totals}));
+                        }
+                    } catch (e) {console.log(e);}
+                }
+            }
+
+	        async function errorCb(errorCode) {
+                var selected = await showDialog(14200014, ["120"]);
+                console.log({selected: selected, errorCode: errorCode});
+                if(1 === selected) {
+                    getLegalRequiredDoc(window.settings.aid, $('#language').val());
+                } else {
+                    launcherClose();
+                }
+            }
+
+	        function submitAgree(aid, legal_id) {
+		        siteRequest('user/legal/set', {aid: aid, legal_id: legal_id}, function(result) {
+			        result = JSON.parse(result);
+			        try {
+				        if(result.result === 'done') {
+					        launcher.ok();
+                        }
+			        } catch (e) {console.log(e);}
+		        });
+	        }
+
+	        var getUrlParameter = function getUrlParameter(sParam) {
+		        var sPageURL = window.location.search.substring(1),
+			        sURLVariables = sPageURL.split('&'),
+			        sParameterName,
+			        i;
+
+		        for (i = 0; i < sURLVariables.length; i++) {
+			        sParameterName = sURLVariables[i].split('=');
+
+			        if (sParameterName[0] === sParam) {
+				        return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+			        }
+		        }
+	        };
+
+	        function loadLegalDoc(document, lang) {
+		        siteRequest('user/legal/get', {document: document, lang: lang}, function(result) {
+			        result = JSON.parse(result);
+			        if(result) {
+				        try {
+					        $('#title').html(result.localisation.typeName);
+					        var legalText = '<p><strong>'+result.localisation.lastUpdate+' '+result.localisation.updateDate+'</strong></p>'
+						        +result.localisation.text;
+					        $('#message .text').html(legalText);
+					        $('#license_agreement_page').attr('data-legal-id', result.id);
+				        } catch (e) {console.log(e);}
+			        }
+		        });
+            }
+        </script>
+    </div>
+</body>
+</html>
